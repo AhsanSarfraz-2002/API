@@ -53,7 +53,7 @@ const WeatherStyling = () => {
             type="text" 
             name="city"
             placeholder="Enter city"
-            className="border-none outline-none rounded-t-lg p-3 w-full md:w-3/4 placeholder-gray-400 focus:ring-2 focus:ring-blue-300 transition mb-2 md:mb-0 md:mr-2"
+            className="border-none outline-none rounded-t-lg p-3 w-full md:w-3/4 placeholder-gray-400 transition mb-2 md:mb-0 md:mr-2"
           />
           <button
             type="submit"
@@ -64,16 +64,19 @@ const WeatherStyling = () => {
         </form>
         <div className='p-6'>
           <h2 className="text-2xl font-bold text-center mb-4 text-gray-800">Weather Data for {weather.location.name}</h2>
-          <div className="flex justify-center mb-4">
-            <img src={weatherIconUrl} alt={weather.current.condition.text} className="w-24 md:w-32" />
-          </div>
+          <div className='flex'>
+            <div>
           <p className="text-gray-700"><strong>Region:</strong> {weather.location.region}</p>
           <p className="text-gray-700"><strong>Country:</strong> {weather.location.country}</p>
           <p className="text-gray-700"><strong>Temperature:</strong> {temperature}{temperatureUnit}</p>
-          <p className="text-gray-700"><strong>Condition:</strong> {weather.current.condition.text}</p>
           <p className="text-gray-700"><strong>Humidity:</strong> {weather.current.humidity}%</p>
           <p className="text-gray-700"><strong>Wind Speed:</strong> {weather.current.wind_kph} km/h</p>
           <p className="text-gray-700"><strong>Last Updated:</strong> {weather.current.last_updated}</p>
+          </div>
+          <div className="flex justify-center mb-4">
+            <img src={weatherIconUrl} alt={weather.current.condition.text} className="w-24 md:w-32" />
+          </div>
+          </div>
           <button
             onClick={() => setCelsius(!celsius)}
             className="mt-4 w-full bg-gray-200 rounded-md p-3 hover:bg-gray-300 transition"
