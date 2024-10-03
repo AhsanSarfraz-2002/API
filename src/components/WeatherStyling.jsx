@@ -6,6 +6,7 @@ const WeatherStyling = () => {
   const [error, setError] = useState(null);
   const [celsius, setCelsius] = useState(true);
   const [city, setCity] = useState('lahore');
+  const [currentTime, setCurrentTime] = useState('');
 
   useEffect(() => {
     const fetchWeather = async () => {
@@ -27,6 +28,18 @@ const WeatherStyling = () => {
     fetchWeather();
   }, [city]);
 
+  useEffect(() => {
+    const updateLocalTime = () => {
+      if (weather) {
+        const localTime = new Date(weather.location.localtime);
+        setCurrentTime(localTime.toLocaleTimeString());
+      }
+    };
+
+    const intervalId = setInterval(updateLocalTime, 1000); 
+    return () => clearInterval(intervalId); 
+  }, [weather]);
+
   const conversion = (celsius) => (celsius * 9 / 5) + 32;
 
   const search = (event) => {
@@ -46,7 +59,7 @@ const WeatherStyling = () => {
   const weatherIconUrl = weather.current.condition.icon;
 
   return (
-    <div className="bg-gradient-to-br from-blue-400 to-red-500 min-h-screen flex items-center justify-center">
+    <div className="bg-gradient-to-br from-orange-400 to-blue-600 min-h-screen flex items-center justify-center">
       <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg overflow-hidden w-full p-4">
         <form onSubmit={search} className="flex flex-col md:flex-row border-b border-gray-200 mb-4">
           <input
@@ -57,25 +70,28 @@ const WeatherStyling = () => {
           />
           <button
             type="submit"
-            className="w-full md:w-1/4 bg-blue-500 text-white rounded-lg p-3 hover:bg-blue-600 transition"
+            className="w-full md:w-1/4 bg-blue-500 text-white rounded-tr-lg p-3 hover:bg-blue-600 transition"
           >
             Search
           </button>
         </form>
         <div className='p-6'>
           <h2 className="text-2xl font-bold text-center mb-4 text-gray-800">Weather Data for {weather.location.name}</h2>
+          <div className='text-center mb-4'>
+            <h3 className="text-xl font-semibold text-gray-800">Local Time: {currentTime}</h3>
+          </div>
           <div className='flex'>
             <div>
-          <p className="text-gray-700"><strong>Region:</strong> {weather.location.region}</p>
-          <p className="text-gray-700"><strong>Country:</strong> {weather.location.country}</p>
-          <p className="text-gray-700"><strong>Temperature:</strong> {temperature}{temperatureUnit}</p>
-          <p className="text-gray-700"><strong>Humidity:</strong> {weather.current.humidity}%</p>
-          <p className="text-gray-700"><strong>Wind Speed:</strong> {weather.current.wind_kph} km/h</p>
-          <p className="text-gray-700"><strong>Last Updated:</strong> {weather.current.last_updated}</p>
-          </div>
-          <div className="flex justify-center mb-4">
-            <img src={weatherIconUrl} alt={weather.current.condition.text} className="w-24 md:w-32" />
-          </div>
+              <p className="text-gray-700"><strong>Region:</strong> {weather.location.region}</p>
+              <p className="text-gray-700"><strong>Country:</strong> {weather.location.country}</p>
+              <p className="text-gray-700"><strong>Temperature:</strong> {temperature}{temperatureUnit}</p>
+              <p className="text-gray-700"><strong>Humidity:</strong> {weather.current.humidity}%</p>
+              <p className="text-gray-700"><strong>Wind Speed:</strong> {weather.current.wind_kph} km/h</p>
+              <p className="text-gray-700"><strong>Last Updated:</strong> {weather.current.last_updated}</p>
+            </div>
+            <div className="flex justify-center mb-4">
+              <img src={weatherIconUrl} alt={weather.current.condition.text} className="w-24 md:w-32" />
+            </div>
           </div>
           <button
             onClick={() => setCelsius(!celsius)}
