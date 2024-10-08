@@ -1,14 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // import Weather from './components/Weather';
-import WeatherAxios from './components/WeatherAxios';
+import WeatherStyling from './components/WeatherStyling';
 
 const App = () => {
   return (
     <>
       <Router>
         <Routes>
-          <Route path="/" element={<WeatherAxios />} />
+          <Route path="/" element={<WeatherStyling />} />
         </Routes>
       </Router>
     </>

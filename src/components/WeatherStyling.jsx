@@ -31,8 +31,9 @@ const WeatherStyling = () => {
   useEffect(() => {
     const updateLocalTime = () => {
       if (weather) {
+        const timeZone = weather.location.tz_id;
         const localTime = new Date(weather.location.localtime);
-        setCurrentTime(localTime.toLocaleTimeString());
+        setCurrentTime(localTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone }));
       }
     };
 
