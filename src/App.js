@@ -1,14 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // import Weather from './components/Weather';
-import WeatherStyling from './components/WeatherStyling';
+import Calculator from './components/Calculator';
 
 const App = () => {
   return (
     <>
       <Router>
         <Routes>
-          <Route path="/" element={<WeatherStyling />} />
+          <Route path="/" element={<Calculator />} />
         </Routes>
       </Router>
     </>
