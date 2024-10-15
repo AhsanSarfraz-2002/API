@@ -1,60 +1,67 @@
-import React, { createContext, useState, useContext } from 'react';
-
-const CalculatorContext = createContext();
-
-const CalculatorProvider = ({ children }) => {
-  const [result, setResult] = useState(0);
+import React, { useState } from 'react';
+const Calculator = () => {
   const [num1, setNum1] = useState('');
   const [num2, setNum2] = useState('');
-  const [operation, setOperation] = useState('');
-
-  const calculate = () => {
+  const [result, setResult] = useState(null);
+  const [operation, setOperation] = useState('add');
+  const [error, setError] = useState('');
+  const calculate = (num1, num2, operation) => {
     const n1 = parseFloat(num1);
     const n2 = parseFloat(num2);
-    let res;
-
+    if (isNaN(n1) || isNaN(n2)) return 'Invalid input';
     switch (operation) {
-      case 'add': res = n1 + n2; break;
-      case 'subtract': res = n1 - n2; break;
-      case 'multiply': res = n1 * n2; break;
-      case 'divide': res = n2 !== 0 ? n1 / n2 : 'Error'; break;
-      default: res = 'Select operation';
+      case 'add':
+        return n1 + n2;
+      case 'subtract':
+        return n1 - n2;
+      case 'multiply':
+        return n1 * n2;
+      case 'divide':
+        return n2 !== 0 ? n1 / n2 : 'Cannot divide by zero';
+      default:
+        return 'Unknown operation';
     }
-    setResult(res);
   };
-
+  const handleCalculate = () => {
+    const res = calculate(num1, num2, operation);
+    if (typeof res === 'string' && res.includes('Invalid input')) {
+      setError('Please enter valid numbers.');
+      setResult(null);
+    } else {
+      setError('');
+      setResult(res);
+    }
+  };
+  const handleInputChange = (setter) => (e) => {
+    const value = e.target.value;
+    if (!value || !isNaN(value)) {
+      setter(value);
+      setError('');
+    } else {
+      setError('Please enter a valid number.');
+    }
+  };
   return (
-    <CalculatorContext.Provider value={{ num1, setNum1, num2, setNum2, operation, setOperation, result, calculate }}>
-      {children}
-    </CalculatorContext.Provider>
-  );
-};
-
-const Calculator = () => {
-  const { num1, setNum1, num2, setNum2, operation, setOperation, result, calculate } = useContext(CalculatorContext);
-
-  return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-      <h1 className="text-2xl font-bold mb-4">DMAS Calculator</h1>
-      <input type="number" value={num1} onChange={(e) => setNum1(e.target.value)} className="border p-2 mb-2 w-64" placeholder="First Number" />
-      <input type="number" value={num2} onChange={(e) => setNum2(e.target.value)} className="border p-2 mb-2 w-64" placeholder="Second Number" />
-      <div className="flex space-x-2 mb-4">
-        {['add', 'subtract', 'multiply', 'divide'].map((op) => (
-          <button key={op} onClick={() => setOperation(op)} className={`px-4 py-2 border rounded ${operation === op ? 'bg-blue-500 text-white' : 'bg-white text-black'}`}>
-            {op.charAt(0).toUpperCase() + op.slice(1)}
-          </button>
-        ))}
+    <div className="max-w-md mx-auto p-6 rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold text-center mb-4">Calculator</h2>
+      <div className="mb-4">
+        <input
+          type="text" value={num1} onChange={handleInputChange(setNum1)} placeholder="First number" className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"/>
       </div>
-      <button onClick={calculate} className="bg-blue-500 text-white px-4 py-2 rounded">Calculate</button>
-      <h2 className="mt-4 text-lg">Result: {result}</h2>
+      <div className="mb-4">
+        <input
+            type="text" value={num2} onChange={handleInputChange(setNum2)} placeholder="Second number" className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+      </div>
+      {error && <p className="text-red-500 text-center">{error}</p>}
+      <div className="flex space-x-2 mb-4">
+        <button onClick={() => setOperation('add')} className="flex-1 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition">Add</button>
+        <button onClick={() => setOperation('subtract')} className="flex-1 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition">Subtract</button>
+        <button onClick={() => setOperation('multiply')} className="flex-1 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition">Multiply</button>
+        <button onClick={() => setOperation('divide')} className="flex-1 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition">Divide</button>
+      </div>
+      <button onClick={handleCalculate} className="w-full bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition">Calculate</button>
+      <h3 className="text-xl font-semibold text-center mt-4">Result: {result}</h3>
     </div>
   );
 };
-
-const App = () => (
-  <CalculatorProvider>
-    <Calculator />
-  </CalculatorProvider>
-);
-
-export default App;
+export default Calculator;
